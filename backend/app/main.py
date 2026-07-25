@@ -1,14 +1,15 @@
 from fastapi import FastAPI
 
+from app.core.config import settings
+
 app = FastAPI(
-    title="Project Shepherd API",
-    version="0.1.0",
-    description="API oficial de Project Shepherd"
+    title=settings.APP_NAME,
+    version=settings.VERSION,
 )
 
 
 @app.get("/")
-def read_root():
+def root():
     return {
-        "message": "Welcome to Project Shepherd API 🚀"
+        "message": f"Bienvenido a {settings.APP_NAME}"
     }
