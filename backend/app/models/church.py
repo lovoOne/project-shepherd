@@ -30,3 +30,5 @@ class Church(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     
     council = relationship("Council", back_populates="churches")
+    
+    members = relationship("Member", back_populates="church",)

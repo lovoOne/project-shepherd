@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from app.core.config import settings
 from app.api.v1 import councils
 from app.api.v1 import churches
+from app.api.v1 import members
 
 
 app = FastAPI(
@@ -21,6 +22,10 @@ app.include_router(
     prefix="/api/v1",
 )
 
+app.include_router(
+    members.router,
+    prefix="/api/v1",
+)
 
 @app.get("/")
 def root():
