@@ -9,8 +9,8 @@ class Church(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     council_id: Mapped[int | None] = mapped_column(
-    ForeignKey("councils.id"),
-    nullable=True,
+        ForeignKey("councils.id"),
+        nullable=True,
 )
 
     name: Mapped[str] = mapped_column(String(150), nullable=False)
