@@ -1,6 +1,7 @@
 from datetime import date, datetime
+from typing import Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class MemberBase(BaseModel):
@@ -9,7 +10,7 @@ class MemberBase(BaseModel):
     first_name: str
     last_name: str
 
-    gender: str
+    gender: Literal["masculino", "femenino"]
 
     birth_date: date | None = None
 
@@ -26,15 +27,27 @@ class MemberBase(BaseModel):
 
 
 class MemberCreate(MemberBase):
-    pass
 
+    @model_validator(mode="after")
+    def validate_baptism(self):
+        if self.baptized and self.baptism_date is None:
+            raise ValueError(
+                "baptism_date is required when baptized is true"
+            )
+
+        if not self.baptized and self.baptism_date is not None:
+            raise ValueError(
+                "baptism_date must be null when baptized is false"
+            )
+
+        return self
 
 class MemberUpdate(BaseModel):
     church_id: int | None = None
 
     first_name: str | None = None
     last_name: str | None = None
-    gender: str | None = None
+    gender: Literal["masculino","femenino"] | None = None
 
     birth_date: date | None = None
 
@@ -48,7 +61,21 @@ class MemberUpdate(BaseModel):
     join_date: date | None = None
 
     is_active: bool | None = None
+    
+    
+   # @model_validator(mode="after")
+   # def validate_baptism(self):
+    #  if self.baptized is True and self.baptism_date is None:
+     #       raise ValueError(
+      #          "baptism_date is required when baptized is true"
+       #     )
 
+        #if self.baptized is False and self.baptism_date is not None:
+         #   raise ValueError(
+          #      "baptism_date must be null when baptized is false"
+           # )
+
+     #   return self
 
 class MemberResponse(MemberBase):
     id: int

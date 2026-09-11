@@ -3,6 +3,9 @@ from typing import List
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from app.core.dependencies import get_current_user
+from app.models.user import User
+
 from app.crud.church import (
     create_church,
     get_churches,
@@ -17,6 +20,7 @@ from app.schemas.church import (
     ChurchResponse,
 )
 
+
 router = APIRouter(
     prefix="/churches",
     tags=["Churches"],
@@ -30,9 +34,14 @@ router = APIRouter(
 )
 def create_new_church(
     church: ChurchCreate,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return create_church(db, church)
+    return create_church(
+        db,
+        church,
+        current_user,
+    )
 
 
 @router.get(
@@ -40,9 +49,13 @@ def create_new_church(
     response_model=List[ChurchResponse],
 )
 def read_churches(
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return get_churches(db)
+    return get_churches(
+        db,
+        current_user,
+    )
 
 
 @router.get(
@@ -51,9 +64,14 @@ def read_churches(
 )
 def read_church(
     church_id: int,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return get_church(db, church_id)
+    return get_church(
+        db,
+        church_id,
+        current_user,
+    )
 
 
 @router.put(
@@ -63,12 +81,14 @@ def read_church(
 def edit_church(
     church_id: int,
     church: ChurchUpdate,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     return update_church(
         db,
         church_id,
         church,
+        current_user,
     )
 
 
@@ -78,11 +98,11 @@ def edit_church(
 )
 def remove_church(
     church_id: int,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     return delete_church(
         db,
         church_id,
+        current_user,
     )
-    
-    

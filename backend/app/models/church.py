@@ -32,3 +32,5 @@ class Church(Base):
     council = relationship("Council", back_populates="churches")
     
     members = relationship("Member", back_populates="church",)
+    
+    users = relationship("User", back_populates="church",)
